@@ -18,8 +18,8 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 - script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline
 - task: NuGetCommand@2
-  displayName: 'NuGet push'
   inputs:
-    command: push
-    publishVstsFeed: 'IdentityWebInternal'
-    allowPackageConflicts: true
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '6ffc42e3-402c-4666-a0d1-eccacc382a7b'
