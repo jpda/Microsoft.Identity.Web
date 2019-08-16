@@ -8,7 +8,7 @@ variables:
   buildConfiguration: 'Release'
   Major: 0
   Minor: 0
-  Patch: $(Build.BuildId)
+  Patch: $(Rev:.r)
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -20,16 +20,14 @@ steps:
     projects: '**/*Test/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
-  displayName: "pack prerel"
+  displayName: "pack Microsoft.Identity.Web prerel"
   inputs:
     command: pack
+    packagesToPack: '**/Microsoft.Identity.Web.csproj'
     versioningScheme: byPrereleaseNumber
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
-- task: DotNetCoreCLI@2
-  inputs: 
-    command: 'pack'
     includesymbols: true
 - task: DotNetCoreCLI@2
   displayName: "Push to internal nuget"
