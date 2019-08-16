@@ -30,6 +30,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web.Client;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,17 +38,29 @@ namespace Microsoft.Identity.Web
 {
     public static class StartupHelpers
     {
+        public static IServiceCollection AddAzureAdV2Authentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme).AddAzureAD(options => configuration.Bind("AzureAd", options));
+            return services.AddAzureAdV2Authentication();
+        }
+
+        public static IServiceCollection AddAzureAdV2Authentication(this IServiceCollection services, Action<AzureADOptions> configureOptions)
+        {
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme).AddAzureAD(options => configureOptions(options));
+            return services.AddAzureAdV2Authentication();
+        }
+
         /// <summary>
         /// Add authentication with Microsoft identity platform.
-        /// This expects the configuration files will have a section named "AzureAD"
+        /// This expects the configuration files will have a section named "AzureAd"
         /// </summary>
         /// <param name="services">Service collection to which to add this authentication scheme</param>
         /// <param name="configuration">The Configuration object</param>
         /// <returns></returns>
-        public static IServiceCollection AddAzureAdV2Authentication(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddAzureAdV2Authentication(this IServiceCollection services)
         {
-            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-                .AddAzureAD(options => configuration.Bind("AzureAd", options));
+            //services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+            //    .AddAzureAD(options => configuration.Bind("AzureAd", options));
 
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
