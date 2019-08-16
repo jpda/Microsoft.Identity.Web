@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackageId>jpda.Microsoft.Identity.Web</PackageId>
+    <Description>Auto-built package of Microsoft.Identity.Web from the samples project [here](https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/tree/master/Microsoft.Identity.Web)</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    
   </PropertyGroup>
 
   <ItemGroup>
