@@ -19,7 +19,7 @@ steps:
     command: test
     projects: '**/*Test/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: "pack prerel"
   inputs:
     command: pack
@@ -27,7 +27,11 @@ steps:
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  inputs: 
+    command: 'pack'
+    includesymbols: true
+- task: DotNetCoreCLI@2
   displayName: "Push to internal nuget"
   inputs:
     command: 'push'
