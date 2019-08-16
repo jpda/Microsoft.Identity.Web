@@ -14,7 +14,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: test
-    projects: '**/*Tests/*.csproj'
+    projects: '**/*Test/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline
 - task: NuGetCommand@2
