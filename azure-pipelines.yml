@@ -6,18 +6,29 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  version: 0.1
+  Major: 0
+  Minor: 0
+  Patch: $(rev:.r).$(date:yyyyMMdd)
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: "Run tests"
   inputs:
     command: test
     projects: '**/*Test/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-- script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline
 - task: NuGetCommand@2
+  displayName: "pack prerel"
+  inputs:
+    command: pack
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '$(Major)'
+    minorVersion: '$(Minor)'
+    patchVersion: '$(Patch)'
+- task: NuGetCommand@2
+  displayName: "Push to internal nuget"
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
